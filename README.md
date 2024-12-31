@@ -141,4 +141,14 @@ void DisplayRandomText() {
 ## Disclaimer
 This program contains potentially harmful code, including MBR overwriting, which can permanently damage a computer. Use this code for educational purposes only and at your own risk.
 
+---
+
+## Acknowledgments
+- **Author**: ABOLHB
+- **Group**: FREEMASONRY
+
+### Disclaimer of Liability
+The author and group disclaim any liability for misuse of this code. This software is provided "as is" for educational purposes only. Any damage caused by its use is the sole responsibility of the user.
+
+
 
