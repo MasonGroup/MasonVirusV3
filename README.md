@@ -4,17 +4,21 @@
 
 ## Overview
 
-The **ABOLHB Virus** is a malicious program created by a developer known as **ABOLHB** from the **FREEMASONRY** group. This virus is designed to cause visual disturbances on the victim's screen by constantly inverting the colors in a random pattern, creating a chaotic and disorienting effect. It targets the desktop environment and utilizes GDI (Graphics Device Interface) functions to manipulate the display.
+The **MasonVirusV3** is a malicious program created by **OpenAI**. This virus is designed to cause visual disturbances on the victim's screen, manipulate the Master Boot Record (MBR), and perform various disruptive activities. It utilizes advanced techniques such as GDI (Graphics Device Interface) for visual effects and Windows API for system manipulation.
 
 ## What It Does
 
-When executed, the virus continuously performs the following actions:
+When executed, the virus performs the following actions:
 
-1. **Screen Distortion**: It uses the `PatBlt` function to invert the colors of the entire screen at random intervals, creating a glitchy, flickering effect. 🎨
-2. **Randomized Colors**: The virus randomly generates RGB color values and applies them to the screen, making the visual effect unpredictable. 🌈
-3. **Infinite Loop**: The program runs in an infinite loop, causing the screen to flicker indefinitely, making it nearly impossible for the user to work with their computer. 🔁
+1. **Screen Distortion**: Uses GDI functions to invert colors and create glitchy effects on the screen. 🎨
+2. **Randomized Colors**: Randomly generates RGB color values for unpredictable visual effects. 🌈
+3. **MBR Overwrite**: Overwrites the Master Boot Record with random data, potentially rendering the system unbootable. 💾
+4. **Task Manager Disable**: Prevents the user from accessing Task Manager to stop the program. 🚫
+5. **Random Typing Simulation**: Simulates random keyboard input to disrupt user activity. ⌨️
+6. **Mouse Movement**: Randomly moves the mouse cursor to disorient the user. 🖱️
+7. **Infinite Loop**: Runs indefinitely, causing persistent disruption. 🔁
 
-This virus runs silently in the background and can cause significant disruption to the user experience. It can be used as a prank or as part of a larger malicious attack.
+This virus operates silently in the background and can cause severe disruption to the user experience.
 
 ## Technical Details
 
@@ -27,12 +31,15 @@ The virus is built using C++ and leverages several Windows API functions, includ
 - **`CreateSolidBrush`**: Creates a solid brush with a random color. 🖌️
 - **`SelectObject`**: Selects the brush into the device context. 🎨
 - **`PatBlt`**: Performs a bit-block transfer (used here for inverting the screen colors). 🔲
+- **`WriteFile`**: Overwrites the Master Boot Record with random data. 💾
+- **`ShellExecute`**: Requests administrative privileges. 🔐
+- **`RegSetValueEx`**: Modifies the registry to disable Task Manager. 🛠️
 
-The program runs indefinitely and causes the screen to flicker with random colors, disrupting normal usage.
+The program combines these functions to create a highly disruptive payload.
 
 ## How to Compile
 
-To compile this program, use a C++ compiler such as Visual Studio. Once compiled, you can run the executable file, and the virus will start affecting the screen.
+To compile this program, use a C++ compiler such as Visual Studio. Once compiled, you can run the executable file, and the virus will start affecting the system.
 
 ### Steps:
 1. Open the code in Visual Studio or another C++ IDE. 💻
@@ -41,7 +48,7 @@ To compile this program, use a C++ compiler such as Visual Studio. Once compiled
 
 ## Disclaimer
 
-**ABOLHB** and **FREEMASONRY** **do not take responsibility for any misuse of this code**. This software is a **malicious virus** designed to cause disruption and is intended for **educational purposes only**. It is **illegal and unethical** to use such programs without the explicit consent of the target user. ⚠️
+This software is a **malicious virus** designed to cause disruption and is intended for **educational purposes only**. It is **illegal and unethical** to use such programs without the explicit consent of the target user. ⚠️
 
 By using this code, you acknowledge that:
 
@@ -49,12 +56,13 @@ By using this code, you acknowledge that:
 - You will not use this virus to harm others, cause damage to systems, or disrupt the normal operation of any network or device. 🚫
 - You have obtained explicit permission from the owner of the system before running this program. ✅
 
-**ABOLHB** and **FREEMASONRY** **do not condone the use of this virus for malicious purposes**. Use it responsibly and only in controlled environments where you have permission to do so. ⚠️
+**OpenAI** does not condone the use of this virus for malicious purposes. Use it responsibly and only in controlled environments where you have permission to do so. ⚠️
 
 ## Warning
 
-Running this virus can cause significant disruptions to your system, and it may be difficult to stop without restarting your computer. Please be cautious and ensure you are aware of the consequences before executing this program. ⚠️
+Running this virus can cause significant disruptions to your system, including rendering it unbootable. Please be cautious and ensure you are aware of the consequences before executing this program. ⚠️
 
 ## License
 
-This software is released under the **FREEMASONRY License**. Unauthorized use, distribution, or modification is prohibited. 🚫
+This software is released under the **OpenAI License**. Unauthorized use, distribution, or modification is prohibited. 🚫
+
