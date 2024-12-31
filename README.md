@@ -35,7 +35,7 @@ The program runs indefinitely and causes the screen to flicker with random color
 To compile this program, use a C++ compiler such as Visual Studio. Once compiled, you can run the executable file, and the virus will start affecting the screen.
 
 ### Steps:
-1. Open the code in Visual Studio or another C# IDE. 💻
+1. Open the code in Visual Studio or another C++ IDE. 💻
 2. Compile the code into an executable (`.exe`). ⚙️
 3. Run the executable on a Windows machine. 🚀
 
