@@ -144,7 +144,7 @@ This program contains potentially harmful code, including MBR overwriting, which
 ---
 
 ## Acknowledgments
-- **Author**: ABOLHB
+- **Coded By**: ABOLHB
 - **Group**: FREEMASONRY
 
 ### Disclaimer of Liability
