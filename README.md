@@ -1,6 +1,6 @@
 # MasonVirusV3
 
-![MasonVirusV3](https://i.ibb.co/7K0WY3k/imagge.png)
+![MasonVirusV3](https://i.ibb.co/R2rKXqY/image.png)
 
 ## Overview
 
