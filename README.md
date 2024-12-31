@@ -18,7 +18,7 @@ This virus runs silently in the background and can cause significant disruption 
 
 ## Technical Details
 
-The virus is built using C# and leverages several Windows API functions, including:
+The virus is built using C++ and leverages several Windows API functions, including:
 
 - **`GetDesktopWindow`**: Retrieves a handle to the desktop window. 🖥️
 - **`GetWindowDC`**: Retrieves the device context (DC) for the desktop window. 🖱️
@@ -32,7 +32,7 @@ The program runs indefinitely and causes the screen to flicker with random color
 
 ## How to Compile
 
-To compile this program, use a C# compiler such as Visual Studio. Once compiled, you can run the executable file, and the virus will start affecting the screen.
+To compile this program, use a C++ compiler such as Visual Studio. Once compiled, you can run the executable file, and the virus will start affecting the screen.
 
 ### Steps:
 1. Open the code in Visual Studio or another C# IDE. 💻
