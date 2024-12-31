@@ -44,6 +44,30 @@ To compile this program, use a C++ compiler such as Visual Studio. Once compiled
 2. Compile the code into an executable (`.exe`). ⚙️
 3. Run the executable on a Windows machine. 🚀
 
+## Explanation of Code Sections
+
+### Header Files
+The program includes essential headers like `<windows.h>` for Windows API functions, `<random>` for generating random values, and `<thread>` for multithreading capabilities.
+
+### Key Constants and Definitions
+- **`SM_CXSCREEN`** and **`SM_CYSCREEN`**: Used to get the screen dimensions.
+- **`MBR_SIZE`**: Represents the size of the Master Boot Record (512 bytes).
+
+### Admin Check
+The `IsRunningAsAdmin` function checks if the program is running with administrative privileges. Without admin rights, the virus cannot overwrite the MBR.
+
+### MBR Overwrite
+The virus uses the `WriteFile` function to overwrite the MBR with random data. This action corrupts the bootloader, rendering the system unbootable.
+
+### Screen Effects
+The program uses `PatBlt` to invert screen colors and `CreateSolidBrush` to apply random colors. These effects are executed in an infinite loop to create a chaotic visual experience.
+
+### Mouse and Typing Simulation
+The virus randomly moves the mouse pointer and simulates typing random characters on the screen, adding to the disorientation.
+
+### Infinite Loop
+An infinite loop ensures that the virus continues to run until the system is forcibly shut down.
+
 ## Disclaimer
 
 **ChatGPT** does not take responsibility for any misuse of this code. This software is a **malicious virus** designed to cause disruption and is intended for **educational purposes only**. It is **illegal and unethical** to use such programs without the explicit consent of the target user. ⚠️
